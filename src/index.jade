@@ -13,6 +13,93 @@ html
   body
 
     article
+
+      section
+        h1 Digest Cycles in Single Page Apps
+        h2 Brendan Graetz
+        p
+          a(href='http://bguiz.com') bguiz.com
+        p
+          a(href='https://twitter.com/bguiz') @bguiz
+
+      section
+        h2 What is a Digest Cycle?
+        img(src='http://docs.angularjs.org/img/guide/concepts-runtime.png')
+
+      section
+        h2 What is a Digest Cycle?
+        ul
+          li Code that runs at a set interval
+          li Typically used to queue expensive tasks
+          ul
+            li DOM rendering
+            li Triggering listeners
+
+      section
+        h2 Where are they used?
+        ul
+          li "Game Loop"
+          li
+            a(href='http://www.koonsolo.com/news/dewitters-gameloop/') An introduction
+          li
+            a(href='http://www.gameprogblog.com/generic-game-loop/') An in-depth explanation
+
+      section
+        h2 Where are they used?
+        ul
+          li AngularJS
+          li (coined the term)
+          li EmberJS
+          li (calls it the script execution cycle)
+
+      section
+        h2 Where are they -not- used?
+        ul
+          li BackboneJS
+
+      section
+        h2 Why are they important in SPAs?
+        ul
+          li Dirty checking
+          li Improve efficiency
+          ul
+            li Aggregate DOM changes
+            li (render to buffer)
+            li Aggregate listeners
+            li Computed properties
+
+      section
+        h3 (computed properties)
+        p `ember.js:12834`: Computed properties allow you to treat a function like a property
+        code.language-javascript
+          pre.
+            App.Person = Ember.Object.extend({
+                bmi: function() {
+                    var height = this.get('height');
+                    return this.get('weight') / height / height;
+                }.property('weight', 'height')
+            });
+
+      section
+        h2 Avoid in digest cycles
+        p Too much work in each cycle
+        code.language-javascript
+          pre.
+            var socket = io.connect();
+            return {
+              on: function (eventName, callback) {
+                socket.on(eventName, _.throttle(function () {
+                  var args = arguments;
+                  $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                  });
+                }, 500));  // limit to once every 500ms
+              }
+              // ...
+            };
+        p
+          a(href='http://briantford.com/blog/huuuuuge-angular-apps.html') Credit: Huge Angular Apps - Brian Ford
+
     script(src='bower_components/bespoke.js/dist/bespoke.min.js')
     script(src='bower_components/bespoke-bullets/dist/bespoke-bullets.min.js')
     script(src='bower_components/bespoke-hash/dist/bespoke-hash.min.js')
