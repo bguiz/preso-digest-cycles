@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Digest Cycles in Single Page Apps</title><link rel="stylesheet" type="text/css" href="bower_components/prism/prism-tomorrow.css"><link rel="stylesheet" type="text/css" href="styles/main.css"></head><body><article><section><h1>Digest Cycles in Single Page Apps</h1><h2>Brendan Graetz</h2><p><a href="http://bguiz.com">bguiz.com</a></p><p><a href="https://twitter.com/bguiz">@bguiz</a></p></section><section><h2>What is a Digest Cycle?</h2><img src="http://docs.angularjs.org/img/guide/concepts-runtime.png"></section><section><h2>What is a Digest Cycle?</h2><ul><li>Code that runs at a set interval</li><li>Typically used to queue expensive tasks</li><ul><li>DOM rendering</li><li>Triggering listeners</li></ul></ul></section><section><h2>Where are they used?</h2><ul><li>"Game Loop"</li><li><a href="http://www.koonsolo.com/news/dewitters-gameloop/">An introduction</a></li><li><a href="http://www.gameprogblog.com/generic-game-loop/">An in-depth explanation</a></li></ul></section><section><h2>Where are they used?</h2><ul><li>AngularJS</li><li>(coined the term)</li><li>EmberJS</li><li>(calls it the script execution cycle)</li></ul></section><section><h2>Where are they -not- used?</h2><ul><li>BackboneJS</li></ul></section><section><h2>Why are they important in SPAs?</h2><ul><li>Dirty checking</li><li>Improve efficiency</li><ul><li>Aggregate DOM changes</li><li>(render to buffer)</li><li>Aggregate listeners</li><li>Computed properties</li></ul></ul></section><section><h3>(computed properties)</h3><p>`ember.js:12834`: Computed properties allow you to treat a function like a property</p><code class="language-javascript"><pre>App.Person = Ember.Object.extend({
+    bmi: function() {
+        var height = this.get('height');
+        return this.get('weight') / height / height;
+    }.property('weight', 'height')
+});
+</pre></code></section><section><h2>Avoid in digest cycles</h2><p>Too much work in each cycle</p><code class="language-javascript"><pre>var socket = io.connect();
+return {
+  on: function (eventName, callback) {
+    socket.on(eventName, _.throttle(function () {
+      var args = arguments;
+      $rootScope.$apply(function () {
+        callback.apply(socket, args);
+      });
+    }, 500));  // limit to once every 500ms
+  }
+  // ...
+};</pre></code><p><a href="http://briantford.com/blog/huuuuuge-angular-apps.html">Credit: Huge Angular Apps - Brian Ford</a></p></section></article><script src="bower_components/bespoke.js/dist/bespoke.min.js"></script><script src="bower_components/bespoke-bullets/dist/bespoke-bullets.min.js"></script><script src="bower_components/bespoke-hash/dist/bespoke-hash.min.js"></script><script src="bower_components/bespoke-state/dist/bespoke-state.min.js"></script><script src="bower_components/prism/prism.js"></script><script src="scripts/main.js"></script></body></html>
