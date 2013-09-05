@@ -29,11 +29,8 @@ html
       section
         h2 What is a Digest Cycle?
         ul
-          li Code that runs at a set interval
-          li Typically used to queue expensive tasks
-          ul
-            li DOM rendering
-            li Triggering listeners
+          li Code that runs at an interval
+          li Typically used to aggregate expensive tasks
 
       section
         h2 Where are they used?
@@ -47,10 +44,15 @@ html
       section
         h2 Where are they used?
         ul
+          li SPA frameworks
           li AngularJS
-          li (coined the term)
+          li 
+            a(href='https://github.com/angular/angular.js/blob/v1.0.x/src/ng/rootScope.js#L364') (coined the term)
           li EmberJS
-          li (calls it the script execution cycle)
+          li 
+            a(href='https://github.com/emberjs/ember.js/blob/1-0-beta/packages/ember-metal/lib/run_loop.js#L216') (look for Ember.run and runLoop)
+          li
+            a(href='http://bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks') Accessors vs. Dirty-checking
 
       section
         h2 Where are they -not- used?
@@ -70,7 +72,8 @@ html
 
       section
         h3 (computed properties)
-        p `ember.js:12834`: Computed properties allow you to treat a function like a property
+        p 
+          a(href='https://github.com/emberjs/ember.js/blob/1-0-beta/packages/ember-runtime/lib/ext/function.js#L64') Computed properties allow you to treat a function like a property
         code.language-javascript
           pre.
             App.Person = Ember.Object.extend({
@@ -79,6 +82,12 @@ html
                     return this.get('weight') / height / height;
                 }.property('weight', 'height')
             });
+          
+      section
+        h2 Avoid in digest cycles
+        p Too much work in each cycle
+        p
+          a(href='http://stackoverflow.com/a/9693933/194982') Misko Hevery on dirty checking tresholds
 
       section
         h2 Avoid in digest cycles
