@@ -1,6 +1,6 @@
 {
   "name": "digest-cycles-in-single-page-apps-preso",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
